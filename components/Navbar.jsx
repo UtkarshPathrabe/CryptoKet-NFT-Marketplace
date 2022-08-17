@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useRouter } from 'next/router';
 import { useTheme } from 'next-themes';
 import Image from 'next/image';
@@ -7,6 +7,7 @@ import Link from 'next/link';
 // eslint-disable-next-line import/no-cycle
 import { Button } from '.';
 import images from '../assets';
+import { NFTContext } from '../context/NFTContext';
 
 const MenuItems = ({ isMobile, active, setActive }) => {
   const generateLink = (i) => {
@@ -38,8 +39,8 @@ const MenuItems = ({ isMobile, active, setActive }) => {
 };
 
 const ButtonGroup = ({ router, setActive }) => {
-  const hasConnected = true;
-  return (hasConnected) ? (
+  const { connectWallet, currentAccount } = useContext(NFTContext);
+  return (currentAccount) ? (
     <Button
       btnName="Create"
       classStyles="mx-2 rounded-xl"
@@ -52,7 +53,9 @@ const ButtonGroup = ({ router, setActive }) => {
     <Button
       btnName="Connect"
       classStyles="mx-2 rounded-xl"
-      handleClick={() => {}}
+      handleClick={() => {
+        connectWallet();
+      }}
     />
   );
 };
