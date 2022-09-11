@@ -4,8 +4,9 @@ import { useTheme } from 'next-themes';
 
 import { Banner, CreatorCard, NFTCard } from '../components';
 import images from '../assets';
-import { makeId } from '../utils/makeId';
 import { NFTContext } from '../context/NFTContext';
+import { getCreators } from '../utils/getTopCreators';
+import { shortenAddress } from '../utils/shortenAddress';
 
 const Home = () => {
   const { fetchNFTs } = useContext(NFTContext);
@@ -46,6 +47,8 @@ const Home = () => {
     };
   }, []);
 
+  const topCreators = getCreators(nfts);
+
   return (
     <div className="flex justify-center sm:px-4 p-12">
       <div className="w-full minmd:w-4/5">
@@ -58,13 +61,13 @@ const Home = () => {
           <h1 className="font-poppins dark:text-white text-nft-black-1 text-2xl minlg:text-4xl font-semibold ml-4 xs:ml-0">Best Creators</h1>
           <div className="relative flex-1 max-w-full flex mt-3" ref={parentRef}>
             <div className="flex flex-row w-max overflow-x-scroll no-scrollbar select-none" ref={scrollRef}>
-              {[6, 7, 8, 9, 10].map((i) => (
+              {topCreators.slice(0, 10).map((creator, i) => (
                 <CreatorCard
-                  key={`creator=${i}`}
-                  rank={i}
-                  creatorImage={images[`creator${i}`]}
-                  creatorName={`0x${makeId(3)}...${makeId(4)}`}
-                  creatorEths={10 - i * 0.5}
+                  key={creator.seller}
+                  rank={i + 1}
+                  creatorImage={images[`creator${i + 1}`]}
+                  creatorName={shortenAddress(creator.seller)}
+                  creatorEths={creator.sum}
                 />
               ))}
               {!hideButtons && (
@@ -87,19 +90,6 @@ const Home = () => {
           </div>
           <div className="mt-3 w-full flex flex-wrap justify-start md:justify-center">
             { nfts.map((nft) => (<NFTCard key={nft.tokenId} nft={nft} />)) }
-            {/* {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => (
-              <NFTCard
-                key={`nft-${i}`}
-                nft={{
-                  i,
-                  name: `Nifty NFT ${i}`,
-                  price: (10 - i * 0.534).toFixed(2),
-                  seller: `0x${makeId(3)}...${makeId(4)}`,
-                  owner: `0x${makeId(3)}...${makeId(4)}`,
-                  description: 'Cool NFT on Sale',
-                }}
-              />
-            ))} */}
           </div>
         </div>
       </div>
