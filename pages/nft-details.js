@@ -3,13 +3,47 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 
 import { NFTContext } from '../context/NFTContext';
-import { Loader, Button } from '../components';
+import { Loader, Button, Modal } from '../components';
 import images from '../assets';
 import { shortenAddress } from '../utils/shortenAddress';
+
+const PaymentBodyCmp = ({ nft, nftCurrency }) => (
+  <div className="flex flex-col">
+    <div className="flexBetween">
+      <p className="font-poppins dark:text-white text-nft-black-1 font-semibold text-base minlg:text-xl">Item</p>
+      <p className="font-poppins dark:text-white text-nft-black-1 font-semibold text-base minlg:text-xl">Subtotal</p>
+    </div>
+    <div className="flexBetweenStart my-5">
+      <div className="flex-1 flexStartCenter">
+        <div className="relative w-28 h-28">
+          <Image src={nft.image} layout="fill" objectFit="cover" />
+        </div>
+        <div className="flexCenterStart flex-col ml-5">
+          <p className="font-poppins dark:text-white text-nft-black-1 font-semibold text-sm minlg:text-xl">{shortenAddress(nft.seller)}</p>
+          <p className="font-poppins dark:text-white text-nft-black-1 font-semibold text-sm minlg:text-xl">{nft.name}</p>
+        </div>
+      </div>
+      <div>
+        <p className="font-poppins dark:text-white text-nft-black-1 font-normal text-sm minlg:text-xl">
+          {nft.price} <span className="font-semibold">{nftCurrency}</span>
+        </p>
+      </div>
+    </div>
+    <div className="flexBetween mt-10">
+      <p className="font-poppins dark:text-white text-nft-black-1 font-normal text-base minlg:text-xl">
+        Total
+      </p>
+      <p className="font-poppins dark:text-white text-nft-black-1 font-normal text-sm minlg:text-xl">
+        {nft.price} <span className="font-semibold">{nftCurrency}</span>
+      </p>
+    </div>
+  </div>
+);
 
 const NFTDetails = () => {
   const { nftCurrency, currentAccount } = useContext(NFTContext);
   const [isLoading, setIsLoading] = useState(true);
+  const [paymentModal, setPaymentModal] = useState(false);
   const [nft, setNft] = useState({ image: '', tokenId: '', name: '', owner: '', price: '', seller: '' });
   const router = useRouter();
 
@@ -68,10 +102,24 @@ const NFTDetails = () => {
               <Button
                 btnName={`Buy for ${nft.price} ${nftCurrency}`}
                 classStyles="mr-5 sm:mr-0 rounded-xl"
+                handleClick={() => setPaymentModal(true)}
               />
             )}
         </div>
       </div>
+      {paymentModal && (
+      <Modal
+        header="Check Out"
+        body={<PaymentBodyCmp nft={nft} nftCurrency={nftCurrency} />}
+        footer={(
+          <div className="flex flex-row sm:flex-col">
+            <Button btnName="Checkout" classStyles="mr-5 sm:mb-5 sm:mr-0 rounded-xl" handleClick={() => {}} />
+            <Button btnName="Cancel" classStyles="rounded-xl" handleClick={() => setPaymentModal(false)} />
+          </div>
+        )}
+        handleClose={() => setPaymentModal(false)}
+      />
+      )}
     </div>
   );
 };
