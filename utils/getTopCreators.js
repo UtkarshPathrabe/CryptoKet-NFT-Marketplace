@@ -8,5 +8,5 @@ export const getCreators = (nfts) => {
     const seller = creator[0];
     const sum = creator[1].map((item) => Number(item.price)).reduce((prev, value) => prev + value, 0);
     return ({ seller, sum });
-  });
+  }).sort((a, b) => (b.sum - a.sum));
 };
