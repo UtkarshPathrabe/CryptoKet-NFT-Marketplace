@@ -114,7 +114,7 @@ const Home = () => {
                 <h1 className="font-poppins dark:text-white text-nft-black-1 text-2xl minlg:text-4xl font-semibold ml-4 xs:ml-0">Top Sellers</h1>
                 <div className="relative flex-1 max-w-full flex mt-3" ref={parentRef}>
                   <div className="flex flex-row w-max overflow-x-scroll no-scrollbar select-none" ref={scrollRef}>
-                    {topCreators.slice(0, 10).map((creator, i) => (
+                    {topCreators.slice(0, 5).map((creator, i) => (
                       <CreatorCard
                         key={creator.seller}
                         rank={i + 1}
