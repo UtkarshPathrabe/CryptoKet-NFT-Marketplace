@@ -16,7 +16,9 @@ const MyNFTs = () => {
   useEffect(() => {
     fetchMyNFTsOrListedNFTs()
       .then((items) => {
-        setNfts(items);
+        const sortedNfts = [...items];
+        sortedNfts.sort((a, b) => b.tokenId - a.tokenId);
+        setNfts(sortedNfts);
         setNftsCopy(items);
         setIsLoading(false);
       });
@@ -38,7 +40,7 @@ const MyNFTs = () => {
         break;
       }
       default:
-        setNfts(nfts);
+        setNfts(sortedNfts.sort((a, b) => b.tokenId - a.tokenId));
         break;
     }
   }, [activeSelect]);
@@ -80,7 +82,7 @@ const MyNFTs = () => {
       {(!isLoading && nfts.length === 0 && nftsCopy.length === 0)
         ? (
           <div className="flexCenter sm:p-4 p-16">
-            <h1 className="font-poppins dark:text-white text-nft-black-1 text-3xl font-extrabold">No NFTs listed for sale</h1>
+            <h1 className="font-poppins dark:text-white text-nft-black-1 text-3xl font-extrabold">No NFTs owned</h1>
           </div>
         )
         : (
